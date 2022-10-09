@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 // System.Threading.Timer
@@ -27,9 +18,11 @@ namespace SolarSystem {
 		Ellipse earth = new Ellipse();
 		Ellipse mars = new Ellipse();
 
+		object classLock = new object();
+		Timer timer;
+
 		public MainWindow() {
 			InitializeComponent();
-
 
 			sun.Width = 80;
 			sun.Height = 80;
@@ -48,12 +41,12 @@ namespace SolarSystem {
 
 			earth.Width = 30;
 			earth.Height = 30;
-			earth.Fill = Brushes.Green;
+			RadialGradientBrush earthFill = new RadialGradientBrush(Brushes.Green.Color, Brushes.Blue.Color);
+			earth.Fill = earthFill;
 
 			mars.Width = 25;
 			mars.Height = 25;
 			mars.Fill = Brushes.Red;
-
 
 			canvas.Children.Add(sun);
 			canvas.Children.Add(mercury);
@@ -62,13 +55,15 @@ namespace SolarSystem {
 			canvas.Children.Add(mars);
 
 			// Create and start timer
-			DispatcherTimer dt = new DispatcherTimer();
-			dt.Interval = TimeSpan.FromMilliseconds(10);
-			dt.Tick += Update;
-			dt.Start();
+			timer = new Timer((o) => {
+				try {
+					Dispatcher.Invoke(() => { Update(); });
+				} catch (Exception e) { }
+			}, null, 0, 1);
 		}
+
 		double angle = 0;
-		void Update(object sender, EventArgs evnt) {
+		void Update() {
 			if (canvas.Width == 0 || canvas.Height == 0)
 				return;
 			Orbit(mercury, 100, angle);

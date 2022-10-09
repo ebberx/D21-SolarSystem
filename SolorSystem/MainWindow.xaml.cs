@@ -41,7 +41,8 @@ namespace SolorSystem
 
 			earth.Width = 30;
 			earth.Height = 30;
-			earth.Fill = Brushes.Green;
+			RadialGradientBrush earthFill = new RadialGradientBrush(Brushes.Green.Color, Brushes.Blue.Color);
+			earth.Fill = earthFill;
 
 			mars.Width = 25;
 			mars.Height = 25;
