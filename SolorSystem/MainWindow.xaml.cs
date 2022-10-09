@@ -4,7 +4,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-// System.Windows.Threading.DispatchTimer
+// System.Windows.Threading.DispatcherTimer
 
 namespace SolorSystem
 {
